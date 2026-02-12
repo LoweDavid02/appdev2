@@ -13,3 +13,8 @@ import FlexDimensionsScreen from './screens/FlexDimensionsScreen';
 export default function App() {
   return <FlexDimensionsScreen />;
 }
+import PercentageDimensionsScreen from './screens/PercentageDimensionsScreen';
+
+export default function App() {
+  return <PercentageDimensionsScreen />;
+}
