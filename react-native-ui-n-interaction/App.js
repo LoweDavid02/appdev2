@@ -1,20 +1,36 @@
-import StyleScreen from './screens/StyleScreen';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, ScrollView } from "react-native";
+
+// Import all UI & Interaction sections
+import StyleExample from "./components/StyleExample";
+import FixedDimensions from "./components/FixedDimensions";
+import FlexDimensions from "./components/FlexDimensions";
+import PercentageDimensions from "./components/PercentageDimensions";
 
 export default function App() {
-  return <StyleScreen />;
-}
-import FixedDimensionsScreen from './screens/FixedDimensionsScreen';
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      
+      {/* STYLE SECTION */}
+      <StyleExample />
 
-export default function App() {
-  return <FixedDimensionsScreen />;
-}
-import FlexDimensionsScreen from './screens/FlexDimensionsScreen';
+      {/* FIXED DIMENSIONS SECTION */}
+      <FixedDimensions />
 
-export default function App() {
-  return <FlexDimensionsScreen />;
-}
-import PercentageDimensionsScreen from './screens/PercentageDimensionsScreen';
+      {/* FLEX DIMENSIONS SECTION */}
+      <FlexDimensions />
 
-export default function App() {
-  return <PercentageDimensionsScreen />;
+      {/* PERCENTAGE DIMENSIONS SECTION */}
+      <PercentageDimensions />
+
+      <StatusBar style="auto" />
+    </ScrollView>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    backgroundColor: "#fff",
+  },
+});
