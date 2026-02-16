@@ -13,10 +13,12 @@ export default function AlignSelfExample() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 150,
     flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#f0f0f0",
     padding: 10,
+    marginBottom: 20,
   },
   box: {
     width: 60,
