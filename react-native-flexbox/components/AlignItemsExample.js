@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   box: {
     width: 80,
     height: 80,
-    backgroundColor: "brown",
+    backgroundColor: "#274e13",
     margin: 5,
   },
 });

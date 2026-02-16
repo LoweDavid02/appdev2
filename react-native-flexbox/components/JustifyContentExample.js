@@ -18,6 +18,6 @@ const styles = StyleSheet.create({
   box: {
     width: 60,
     height: 60,
-    backgroundColor: "teal",
+    backgroundColor: "#38761d",
   },
 });

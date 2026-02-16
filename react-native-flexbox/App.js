@@ -7,6 +7,9 @@ import FlexDirectionExample from "./components/FlexDirectionExample";
 import LayoutDirectionExample from "./components/LayoutDirectionExample";
 import JustifyContentExample from "./components/JustifyContentExample";
 import AlignItemsExample from "./components/AlignItemsExample";
+import AlignSelfExample from "./components/AlignSelfExample";
+import AlignContentExample from "./components/AlignContentExample";
+import FlexWrapExample from "./components/FlexWrapExample";
 
 export default function App() {
   return (
@@ -35,6 +38,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#000000",
   },
 });
