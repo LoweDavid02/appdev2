@@ -15,12 +15,13 @@ export default function AlignContentExample() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 200,
     flexDirection: "row",
     flexWrap: "wrap",
     alignContent: "center",
     backgroundColor: "#f0f0f0",
     padding: 10,
+    marginBottom: 20,
   },
   box: {
     width: 80,
