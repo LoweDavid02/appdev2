@@ -61,7 +61,7 @@ export default function Signup({ onSwitchToLogin }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
     justifyContent: 'center',
     padding: 20,
   },
