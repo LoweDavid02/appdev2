@@ -30,15 +30,6 @@ export default function App() {
       {/* ALIGN ITEMS */}
       <AlignItemsExample />
 
-      {/* ALIGN SELF */}
-      <AlignSelfExample />
-
-      {/* ALIGN CONTENT */}
-      <AlignContentExample />
-
-      {/* FLEX WRAP */}
-      <FlexWrapExample />
-
       <StatusBar style="auto" />
     </ScrollView>
   );

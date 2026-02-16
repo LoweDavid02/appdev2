@@ -12,11 +12,11 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: 200,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#ddd",
   },
   box: {
     width: "50%",
     height: "50%",
-    backgroundColor: "#5a4f45",
+    backgroundColor: "purple",
   },
 });

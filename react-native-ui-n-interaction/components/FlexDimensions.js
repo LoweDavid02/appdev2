@@ -17,14 +17,14 @@ const styles = StyleSheet.create({
   },
   box1: {
     flex: 1,
-    backgroundColor: "#1c1a18",
+    backgroundColor: "red",
   },
   box2: {
     flex: 2,
-    backgroundColor: "#2d2824",
+    backgroundColor: "green",
   },
   box3: {
     flex: 1,
-    backgroundColor: "#3e3730",
+    backgroundColor: "blue",
   },
 });
