@@ -10,7 +10,7 @@ export default function StyleExample() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#4b1c08",
     padding: 20,
     margin: 20,
   },
