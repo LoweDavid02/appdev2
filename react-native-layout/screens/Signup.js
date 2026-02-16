@@ -8,8 +8,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Signup() {
+export default function Signup({ onSwitchToLogin }) {
   return (
+    
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
 
@@ -45,9 +46,13 @@ export default function Signup() {
         />
       </View>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => console.log('Signup pressed')}>
         <Ionicons name="person-add-outline" size={20} color="#fff" />
         <Text style={styles.buttonText}> Sign Up</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={onSwitchToLogin} style={styles.switchText}>
+        <Text style={styles.switchTextContent}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -61,7 +66,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 45,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
@@ -89,5 +94,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  switchText: {
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  switchTextContent: {
+    color: '#28a745',
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });

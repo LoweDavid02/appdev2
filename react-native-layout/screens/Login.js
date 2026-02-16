@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Login() {
+export default function Login({ onSwitchToSignup }) {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../assets/images/login.png')}
+        source={require('../assets/login.png')}
         style={styles.image}
       />
 
@@ -37,9 +37,13 @@ export default function Login() {
         />
       </View>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => console.log('Login pressed')}>
         <Ionicons name="log-in-outline" size={20} color="#fff" />
         <Text style={styles.buttonText}> Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={onSwitchToSignup} style={styles.switchText}>
+        <Text style={styles.switchTextContent}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
@@ -48,7 +52,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     justifyContent: 'center',
     padding: 20,
   },
@@ -57,9 +61,10 @@ const styles = StyleSheet.create({
     height: 150,
     alignSelf: 'center',
     marginBottom: 20,
+    resizeMode: 'contain',
   },
   title: {
-    fontSize: 28,
+    fontSize: 45,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
@@ -87,5 +92,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  switchText: {
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  switchTextContent: {
+    color: '#007bff',
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });
