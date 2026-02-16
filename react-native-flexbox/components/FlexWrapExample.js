@@ -15,11 +15,12 @@ export default function FlexWrapExample() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 220,
     flexDirection: "row",
     flexWrap: "wrap",
     backgroundColor: "#f0f0f0",
     padding: 10,
+    marginBottom: 20,
   },
   box: {
     width: 100,
