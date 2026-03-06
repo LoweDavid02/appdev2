@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Signup({ onSwitchToLogin }) {
+export default function Signup({ onSwitchToLogin, onNavigateToTodo }) {
   return (
     
     <View style={styles.container}>
@@ -46,7 +46,7 @@ export default function Signup({ onSwitchToLogin }) {
         />
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log('Signup pressed')}>
+      <TouchableOpacity style={styles.button} onPress={onNavigateToTodo}>
         <Ionicons name="person-add-outline" size={20} color="#fff" />
         <Text style={styles.buttonText}> Sign Up</Text>
       </TouchableOpacity>

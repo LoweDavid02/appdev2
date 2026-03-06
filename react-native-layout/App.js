@@ -5,16 +5,22 @@ import { useState } from 'react';
 // Import your Login screen
 import Login from './screens/Login';
 import Signup from './screens/Signup';
+import Todo from './screens/Todo';
 
 export default function App() {
-  const [isLoginScreen, setIsLoginScreen] = useState(true);
+  const [currentScreen, setCurrentScreen] = useState('login');
 
   return (
     <View style={styles.container}>
-      {isLoginScreen ? (
-        <Login onSwitchToSignup={() => setIsLoginScreen(false)} />
+      {currentScreen === 'login' ? (
+        <Login onSwitchToSignup={() => setCurrentScreen('signup')} />
+      ) : currentScreen === 'signup' ? (
+        <Signup 
+          onSwitchToLogin={() => setCurrentScreen('login')}
+          onNavigateToTodo={() => setCurrentScreen('todo')}
+        />
       ) : (
-        <Signup onSwitchToLogin={() => setIsLoginScreen(true)} />
+        <Todo />
       )}
       <StatusBar style="auto" />
     </View>
