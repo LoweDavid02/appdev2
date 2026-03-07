@@ -21,11 +21,11 @@ export default function LoginScreen() {
 
       {/* 2. Form Section */}
       <View style={styles.formContainer}>
-        <Text style={styles.label}></Text>
-        <TextInput style={styles.input} placeholder="" />
+        <Text style={styles.label}>Email Address</Text>
+        <TextInput style={styles.input} placeholder="john@gmail.com" />
 
-        <Text style={styles.label}></Text>
-        <TextInput style={styles.input} secureTextEntry placeholder="" />
+        <Text style={styles.label}>Password</Text>
+        <TextInput style={styles.input} secureTextEntry placeholder="********" />
 
         <TouchableOpacity>
           <Text style={styles.forgotText}></Text>
@@ -86,5 +86,18 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 60,
     borderTopRightRadius: 60,
     padding: 30,
+  },
+
+  label: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 5,
+    marginTop: 15,
+  },
+  input: {
+    backgroundColor: "#F0F0F0",
+    padding: 15,
+    borderRadius: 15,
+    fontSize: 16,
   },
 });
