@@ -30,10 +30,6 @@ export default function SignupScreen() {
         <Text style={styles.label}>Password</Text>
         <TextInput style={styles.input} secureTextEntry placeholder="********" />
 
-        <TouchableOpacity>
-          <Text style={styles.forgotText}>Forgot Password?</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity style={styles.loginButton}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
