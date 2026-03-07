@@ -32,7 +32,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}></Text>
+          <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
         <Text style={styles.orText}></Text>
@@ -105,5 +105,17 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginTop: 10,
     color: "#666",
+  },
+
+  loginButton: {
+    backgroundColor: "#FFCC00",
+    padding: 18,
+    borderRadius: 15,
+    alignItems: "center",
+    marginTop: 30,
+  },
+  loginButtonText: {
+    fontWeight: "bold",
+    fontSize: 18,
   },
 });
