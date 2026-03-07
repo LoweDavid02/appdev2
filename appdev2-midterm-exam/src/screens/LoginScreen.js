@@ -39,15 +39,15 @@ export default function LoginScreen() {
 
         <View style={styles.socialRow}>
           <TouchableOpacity style={styles.socialIcon}>
-            <Ionicons name="" size={30} color="#DB4437" />
+            <Ionicons name="logo-google" size={30} color="#DB4437" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.socialIcon}>
-            <Ionicons name="" size={30} color="black" />
+            <Ionicons name="logo-apple" size={30} color="black" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.socialIcon}>
-            <Ionicons name="" size={30} color="#4267B2" />
+            <Ionicons name="logo-facebook" size={30} color="#4267B2" />
           </TouchableOpacity>
         </View>
 
@@ -124,5 +124,17 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     fontSize: 18,
     fontWeight: "bold",
+  },
+
+  socialRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 20,
+  },
+  socialIcon: {
+    backgroundColor: "#F0F0F0",
+    padding: 15,
+    borderRadius: 15,
   },
 });
