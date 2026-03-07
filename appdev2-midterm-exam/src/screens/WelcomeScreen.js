@@ -61,4 +61,10 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "contain",
   },
+  bottomSection: {
+    flex: 1.5,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 40,
+  },
 });
