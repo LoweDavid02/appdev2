@@ -79,4 +79,12 @@ const styles = StyleSheet.create({
     height: "70%",
     resizeMode: "contain",
   },
+
+  formContainer: {
+    flex: 2,
+    backgroundColor: "#FFF",
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    padding: 30,
+  },
 });
