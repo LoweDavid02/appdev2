@@ -35,7 +35,7 @@ export default function LoginScreen() {
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
-        <Text style={styles.orText}></Text>
+        <Text style={styles.orText}>Or</Text>
 
         <View style={styles.socialRow}>
           <TouchableOpacity style={styles.socialIcon}>
@@ -117,5 +117,12 @@ const styles = StyleSheet.create({
   loginButtonText: {
     fontWeight: "bold",
     fontSize: 18,
+  },
+
+  orText: {
+    textAlign: "center",
+    marginVertical: 20,
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
