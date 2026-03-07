@@ -68,4 +68,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#7D7AFF",
     paddingTop: 40,
   },
+
+  header: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: "80%",
+    height: "70%",
+    resizeMode: "contain",
+  },
 });
