@@ -5,7 +5,7 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       {/* 1. Top Section */}
       <View style={styles.topSection}>
-        <Text style={styles.title}></Text>
+        <Text style={styles.title}>Let's Get Started!</Text>
       </View>
 
       {/* 2. Middle Section */}
@@ -39,5 +39,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#7D7AFF",
     paddingTop: 80,
     paddingHorizontal: 30,
+  },
+
+  topSection: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center",
   },
 });
