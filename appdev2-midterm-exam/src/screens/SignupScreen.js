@@ -14,7 +14,7 @@ export default function SignupScreen() {
       {/* 1. Header Section */}
       <View style={styles.header}>
         <Image
-          source={require("./../../assets/login.webp")}
+          source={require("./../../assets/signup.webp")}
           style={styles.image}
         />
       </View>
