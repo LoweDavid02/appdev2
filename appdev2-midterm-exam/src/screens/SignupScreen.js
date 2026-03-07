@@ -31,7 +31,7 @@ export default function SignupScreen() {
         <TextInput style={styles.input} secureTextEntry placeholder="********" />
 
         <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>Login</Text>
+          <Text style={styles.loginButtonText}>Sign Up</Text>
         </TouchableOpacity>
 
         <Text style={styles.orText}>Or</Text>
