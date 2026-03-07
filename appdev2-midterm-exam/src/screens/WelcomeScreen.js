@@ -33,4 +33,11 @@ export default function WelcomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#7D7AFF",
+    paddingTop: 80,
+    paddingHorizontal: 30,
+  },
+});
