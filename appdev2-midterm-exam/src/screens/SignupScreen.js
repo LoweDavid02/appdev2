@@ -21,6 +21,9 @@ export default function SignupScreen() {
 
       {/* 2. Form Section */}
       <View style={styles.formContainer}>
+        <Text style={styles.label}>Full Name</Text>
+        <TextInput style={styles.input} placeholder="John Doe" />
+
         <Text style={styles.label}>Email Address</Text>
         <TextInput style={styles.input} placeholder="john@gmail.com" />
 
