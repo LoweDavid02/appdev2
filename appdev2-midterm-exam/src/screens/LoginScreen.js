@@ -28,7 +28,7 @@ export default function LoginScreen() {
         <TextInput style={styles.input} secureTextEntry placeholder="********" />
 
         <TouchableOpacity>
-          <Text style={styles.forgotText}></Text>
+          <Text style={styles.forgotText}>Forgot Password?</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.loginButton}>
@@ -99,5 +99,11 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 15,
     fontSize: 16,
+  },
+
+  forgotText: {
+    alignSelf: "flex-end",
+    marginTop: 10,
+    color: "#666",
   },
 });
