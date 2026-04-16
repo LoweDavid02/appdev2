@@ -121,6 +121,21 @@ function DetailsScreen({ navigation }) {
           onPress={() => navigation.push('Details')}
         />
       </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>GOING BACK</Text>
+        {/* Section 9: goBack() */}
+        <Btn
+          label="←  goBack()"
+          variant="ghost"
+          onPress={() => navigation.goBack()}
+        />
+        {/* Section 9: popToTop() */}
+        <Btn
+          label="⇤  popToTop()"
+          variant="ghost"
+          onPress={() => navigation.popToTop()}
+        />
+      </View>
     </ScrollView>
   );
 }
