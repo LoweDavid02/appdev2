@@ -152,6 +152,15 @@ function DetailsScreen({ navigation, route }) {
           onPress={() => navigation.popToTop()}
         />
       </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>PARAMS</Text>
+        {/* Section 12: update params with setParams() */}
+        <Btn
+          label="✎  setParams({ itemId: 99 })"
+          variant="ghost"
+          onPress={() => navigation.setParams({ itemId: 99 })}
+        />
+      </View>
     </ScrollView>
   );
 }
