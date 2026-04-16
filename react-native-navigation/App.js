@@ -41,7 +41,7 @@ function HomeScreen({ navigation, route }) {
   );
 }
 
-// ─── Section 4: DetailsScreen (second screen) ────────────────────────────────
+// ─── Section 4: DetailsScreen (second screen, initialRouteName="Home") ───────
 function DetailsScreen({ navigation, route }) {
   // Section 10: read params
   const { itemId, otherParam } = route.params ?? {};
