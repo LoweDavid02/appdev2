@@ -186,6 +186,8 @@ export default function App() {
             headerTintColor: C.teal,
             headerTitleStyle: { fontWeight: '800', letterSpacing: 3, color: C.text },
           }}
+          // Section 11: initialParams — default values when no params are passed
+          initialParams={{ itemId: 0, otherParam: 'default' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
