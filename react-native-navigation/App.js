@@ -125,7 +125,7 @@ export default function App() {
         // Section 4: set initial route
         initialRouteName="Home"
       >
-        {/* Section 5: options prop to customize header */}
+        {/* Section 5: options prop — customize header title and style per screen */}
         <Stack.Screen
           name="Home"
           component={HomeScreen}
