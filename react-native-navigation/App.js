@@ -1,157 +1,131 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button, View, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+  ScrollView,
+} from 'react-native';
 
-const Stack = createNativeStackNavigator();
+// ─── Design Tokens ────────────────────────────────────────────────────────────
+const C = {
+  bg:        '#0e0e0e',
+  surface:   '#1a1a1a',
+  border:    '#2e2e2e',
+  accent:    '#f5a623',
+  accentDim: '#7a5010',
+  text:      '#f0ece4',
+  muted:     '#6b6560',
+  danger:    '#e05252',
+  teal:      '#3ecfb2',
+};
 
-// ─── Section 3: HomeScreen (basic screen) ────────────────────────────────────
-function HomeScreen({ navigation, route }) {
-  // Section 13: read a param passed back from DetailsScreen
-  const result = route.params?.result;
+// ─── Reusable Button ──────────────────────────────────────────────────────────
+function Btn({ label, onPress, variant = 'primary' }) {
+  const bg =
+    variant === 'primary' ? C.accent :
+    variant === 'ghost'   ? 'transparent' :
+    variant === 'danger'  ? C.danger :
+    variant === 'teal'    ? C.teal : C.surface;
+
+  const fg =
+    variant === 'primary' ? '#0e0e0e' :
+    variant === 'ghost'   ? C.muted :
+    variant === 'danger'  ? '#fff' :
+    variant === 'teal'    ? '#0e0e0e' : C.text;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Home Screen</Text>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
+      style={[styles.btn, { backgroundColor: bg, borderColor: variant === 'ghost' ? C.border : 'transparent' }]}
+    >
+      <Text style={[styles.btnText, { color: fg }]}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
 
-      {/* Section 13: show result passed back from Details */}
-      {result ? (
-        <Text style={styles.info}>Result from Details: {result}</Text>
-      ) : null}
-
-      {/* Section 6: Button that navigates to Details */}
-      <Button
-        title="Go to Details"
-        onPress={() =>
-          // Section 10: passing params to Details
-          navigation.navigate('Details', { itemId: 42, otherParam: 'anything' })
-        }
-      />
-
-      {/* Section 14: navigate to nested screen */}
-      <Button
-        title="Go to Nested Settings"
-        onPress={() =>
-          navigation.navigate('Root', {
-            screen: 'Settings',
-            params: { user: 'Jane' },
-          })
-        }
-      />
+function Tag({ label, color = C.accentDim, textColor = C.accent }) {
+  return (
+    <View style={[styles.tag, { backgroundColor: color }]}>
+      <Text style={[styles.tagText, { color: textColor }]}>{label}</Text>
     </View>
   );
 }
 
-// ─── Section 4: DetailsScreen (second screen, initialRouteName="Home") ───────
-function DetailsScreen({ navigation, route }) {
-  // Section 10: read params
-  const { itemId, otherParam } = route.params ?? {};
+function Divider() {
+  return <View style={styles.divider} />;
+}
 
+// ─── Section 3: HomeScreen ────────────────────────────────────────────────────
+function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Details Screen</Text>
-
-      {/* Section 10: display params */}
-      <Text style={styles.info}>Item ID: {JSON.stringify(itemId)}</Text>
-      <Text style={styles.info}>Other Param: {JSON.stringify(otherParam)}</Text>
-
-      {/* Section 7: navigation.navigate() */}
-      <Button
-        title="Go to Details again (navigate)"
-        onPress={() => navigation.navigate('Details')}
-      />
-
-      {/* Section 8: navigation.push() adds a new instance */}
-      <Button
-        title="Push Details again (push)"
-        onPress={() => navigation.push('Details')}
-      />
-
-      {/* Section 7 & 9: goBack */}
-      <Button title="Go Back" onPress={() => navigation.goBack()} />
-
-      {/* Section 9: popToTop */}
-      <Button title="Pop to Top" onPress={() => navigation.popToTop()} />
-
-      {/* Section 12: update params */}
-      <Button
-        title="Update itemId to 99"
-        onPress={() => navigation.setParams({ itemId: 99 })}
-      />
-
-      {/* Section 13: pass param back to Home */}
-      <Button
-        title="Pass result back to Home"
-        onPress={() => navigation.navigate('Home', { result: 'done' })}
-      />
-    </View>
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+      <View style={styles.heroBlock}>
+        <Tag label="SCREEN · HOME" />
+        <Text style={styles.heroTitle}>Navigator{'\n'}Demo</Text>
+        <Text style={styles.heroSub}>React Navigation · Native Stack · Expo SDK 54</Text>
+      </View>
+      <Divider />
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>NAVIGATION</Text>
+        {/* Section 6: Button navigates to Details */}
+        <Btn
+          label="→  Go to Details"
+          onPress={() => navigation.navigate('Details')}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
-// ─── Section 14: nested navigator screens ────────────────────────────────────
-const RootStack = createNativeStackNavigator();
-
-function SettingsScreen({ route }) {
-  const { user } = route.params ?? {};
+// ─── Section 4: DetailsScreen ─────────────────────────────────────────────────
+function DetailsScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings Screen</Text>
-      <Text style={styles.info}>User: {user}</Text>
-    </View>
-  );
-}
-
-function ProfileScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile Screen</Text>
-    </View>
-  );
-}
-
-function RootNavigator() {
-  return (
-    <RootStack.Navigator>
-      <RootStack.Screen name="Profile" component={ProfileScreen} />
-      <RootStack.Screen name="Settings" component={SettingsScreen} />
-    </RootStack.Navigator>
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+      <View style={styles.heroBlock}>
+        <Tag label="SCREEN · DETAILS" color="#1a2e2a" textColor={C.teal} />
+        <Text style={[styles.heroTitle, { color: C.teal }]}>Detail{'\n'}View</Text>
+      </View>
+      <Divider />
+    </ScrollView>
   );
 }
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
+const Stack = createNativeStackNavigator();
+
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        // Section 4: set initial route
         initialRouteName="Home"
+        screenOptions={{
+          headerStyle: { backgroundColor: C.surface },
+          headerTintColor: C.accent,
+          contentStyle: { backgroundColor: C.bg },
+        }}
       >
-        {/* Section 5: options prop — customize header title and style per screen */}
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{
-            title: 'My Home',
-            headerStyle: { backgroundColor: '#6200ee' },
-            headerTintColor: '#fff',
-            headerTitleStyle: { fontWeight: 'bold' },
+            title: 'MY HOME',
+            headerTitleStyle: { fontWeight: '800', letterSpacing: 3, color: C.text },
           }}
         />
         <Stack.Screen
           name="Details"
           component={DetailsScreen}
           options={{
-            title: 'Detail View',
-            headerStyle: { backgroundColor: '#03dac6' },
-            headerTintColor: '#000',
+            title: 'DETAIL VIEW',
+            headerTintColor: C.teal,
+            headerTitleStyle: { fontWeight: '800', letterSpacing: 3, color: C.text },
           }}
-          // Section 11: initialParams — default values if none are passed
-          initialParams={{ itemId: 0, otherParam: 'default' }}
-        />
-        {/* Section 14: nested navigator as a screen */}
-        <Stack.Screen
-          name="Root"
-          component={RootNavigator}
-          options={{ title: 'Nested Navigator' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -159,20 +133,16 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    padding: 16,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  info: {
-    fontSize: 16,
-    color: '#555',
-  },
+  scroll: { flex: 1, backgroundColor: C.bg },
+  scrollContent: { padding: 24, paddingBottom: 48, gap: 0 },
+  heroBlock: { paddingTop: 8, paddingBottom: 28, gap: 10 },
+  heroTitle: { fontSize: 52, fontWeight: '900', color: C.accent, lineHeight: 56, letterSpacing: -1 },
+  heroSub: { fontSize: 12, color: C.muted, letterSpacing: 1.5, textTransform: 'uppercase' },
+  tag: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, marginBottom: 4 },
+  tagText: { fontSize: 10, fontWeight: '700', letterSpacing: 2 },
+  divider: { height: 1, backgroundColor: C.border, marginBottom: 28 },
+  section: { marginBottom: 24, gap: 10 },
+  sectionLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 2, color: C.muted, marginBottom: 4 },
+  btn: { paddingVertical: 14, paddingHorizontal: 20, borderRadius: 6, borderWidth: 1, alignItems: 'center' },
+  btnText: { fontSize: 13, fontWeight: '700', letterSpacing: 1 },
 });
