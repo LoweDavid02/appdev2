@@ -92,6 +92,21 @@ function DetailsScreen({ navigation }) {
         <Text style={[styles.heroTitle, { color: C.teal }]}>Detail{'\n'}View</Text>
       </View>
       <Divider />
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>NAVIGATION OBJECT</Text>
+        {/* Section 7: navigation.navigate() */}
+        <Btn
+          label="→  navigation.navigate('Home')"
+          variant="ghost"
+          onPress={() => navigation.navigate('Home')}
+        />
+        {/* Section 7: navigation.goBack() */}
+        <Btn
+          label="←  navigation.goBack()"
+          variant="ghost"
+          onPress={() => navigation.goBack()}
+        />
+      </View>
     </ScrollView>
   );
 }
