@@ -60,7 +60,10 @@ function Divider() {
 }
 
 // ─── Section 3: HomeScreen ────────────────────────────────────────────────────
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation, route }) {
+  // Section 13: read param passed back from Details
+  const result = route.params?.result;
+
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
@@ -70,10 +73,16 @@ function HomeScreen({ navigation }) {
         <Text style={styles.heroSub}>React Navigation · Native Stack · Expo SDK 54</Text>
       </View>
       <Divider />
+      {/* Section 13: show result returned from Details */}
+      {result ? (
+        <View style={styles.resultBadge}>
+          <Text style={styles.resultLabel}>↩ RETURNED VALUE</Text>
+          <Text style={styles.resultValue}>{result}</Text>
+        </View>
+      ) : null}
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>NAVIGATION</Text>
-        {/* Section 6: Button navigates to Details */}
-        {/* Section 10: pass params along */}
+        {/* Section 6 + 10: navigate with params */}
         <Btn
           label="→  Go to Details"
           onPress={() => navigation.navigate('Details', { itemId: 42, otherParam: 'anything' })}
@@ -160,6 +169,12 @@ function DetailsScreen({ navigation, route }) {
           variant="ghost"
           onPress={() => navigation.setParams({ itemId: 99 })}
         />
+        {/* Section 13: pass result back to Home */}
+        <Btn
+          label="↩  Pass result back to Home"
+          variant="danger"
+          onPress={() => navigation.navigate('Home', { result: 'done' })}
+        />
       </View>
     </ScrollView>
   );
@@ -221,4 +236,7 @@ const styles = StyleSheet.create({
   paramRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: C.border },
   paramKey: { fontSize: 13, color: C.muted, fontWeight: '600', letterSpacing: 0.5 },
   paramVal: { fontSize: 13, color: C.text, fontWeight: '700' },
+  resultBadge: { backgroundColor: '#1a1500', borderWidth: 1, borderColor: C.accentDim, borderRadius: 6, padding: 14, marginBottom: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  resultLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 2, color: C.accentDim },
+  resultValue: { fontSize: 13, fontWeight: '800', color: C.accent, letterSpacing: 1 },
 });
