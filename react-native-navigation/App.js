@@ -87,6 +87,17 @@ function HomeScreen({ navigation, route }) {
           label="→  Go to Details"
           onPress={() => navigation.navigate('Details', { itemId: 42, otherParam: 'anything' })}
         />
+        {/* Section 14: navigate into nested navigator */}
+        <Btn
+          label="⊞  Nested Settings"
+          variant="teal"
+          onPress={() =>
+            navigation.navigate('Root', {
+              screen: 'Settings',
+              params: { user: 'Jane' },
+            })
+          }
+        />
       </View>
     </ScrollView>
   );
@@ -180,6 +191,61 @@ function DetailsScreen({ navigation, route }) {
   );
 }
 
+// ─── Section 14: Nested Navigator ─────────────────────────────────────────────
+const RootStack = createNativeStackNavigator();
+
+function SettingsScreen({ route }) {
+  const { user } = route.params ?? {};
+  return (
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <View style={styles.heroBlock}>
+        <Tag label="NESTED · SETTINGS" color="#1a2e2a" textColor={C.teal} />
+        <Text style={[styles.heroTitle, { color: C.teal }]}>Settings</Text>
+      </View>
+      <Divider />
+      <View style={styles.card}>
+        <Text style={styles.cardLabel}>PASSED PARAM</Text>
+        <View style={styles.paramRow}>
+          <Text style={styles.paramKey}>user</Text>
+          <Text style={styles.paramVal}>{user ?? '—'}</Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
+
+function ProfileScreen() {
+  return (
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <View style={styles.heroBlock}>
+        <Tag label="NESTED · PROFILE" />
+        <Text style={styles.heroTitle}>Profile</Text>
+      </View>
+      <Divider />
+      <View style={styles.card}>
+        <Text style={styles.cardLabel}>INFO</Text>
+        <Text style={styles.paramVal}>Nested navigator screen.</Text>
+      </View>
+    </ScrollView>
+  );
+}
+
+function RootNavigator() {
+  return (
+    <RootStack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: C.surface },
+        headerTintColor: C.teal,
+        headerTitleStyle: { fontWeight: '700', color: C.text },
+        contentStyle: { backgroundColor: C.bg },
+      }}
+    >
+      <RootStack.Screen name="Profile" component={ProfileScreen} />
+      <RootStack.Screen name="Settings" component={SettingsScreen} />
+    </RootStack.Navigator>
+  );
+}
+
 // ─── Main App ─────────────────────────────────────────────────────────────────
 const Stack = createNativeStackNavigator();
 
@@ -212,6 +278,15 @@ export default function App() {
           }}
           // Section 11: initialParams — default values when no params are passed
           initialParams={{ itemId: 0, otherParam: 'default' }}
+        />
+        {/* Section 14: nested navigator as a screen */}
+        <Stack.Screen
+          name="Root"
+          component={RootNavigator}
+          options={{
+            title: 'NESTED NAV',
+            headerTitleStyle: { fontWeight: '800', letterSpacing: 3, color: C.text },
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
