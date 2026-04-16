@@ -73,9 +73,10 @@ function HomeScreen({ navigation }) {
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>NAVIGATION</Text>
         {/* Section 6: Button navigates to Details */}
+        {/* Section 10: pass params along */}
         <Btn
           label="→  Go to Details"
-          onPress={() => navigation.navigate('Details')}
+          onPress={() => navigation.navigate('Details', { itemId: 42, otherParam: 'anything' })}
         />
       </View>
     </ScrollView>
@@ -83,7 +84,10 @@ function HomeScreen({ navigation }) {
 }
 
 // ─── Section 4: DetailsScreen ─────────────────────────────────────────────────
-function DetailsScreen({ navigation }) {
+function DetailsScreen({ navigation, route }) {
+  // Section 10: read params from route.params
+  const { itemId, otherParam } = route.params ?? {};
+
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
@@ -92,6 +96,18 @@ function DetailsScreen({ navigation }) {
         <Text style={[styles.heroTitle, { color: C.teal }]}>Detail{'\n'}View</Text>
       </View>
       <Divider />
+      {/* Section 10: display params */}
+      <View style={styles.card}>
+        <Text style={styles.cardLabel}>ROUTE PARAMS</Text>
+        <View style={styles.paramRow}>
+          <Text style={styles.paramKey}>itemId</Text>
+          <Text style={styles.paramVal}>{JSON.stringify(itemId)}</Text>
+        </View>
+        <View style={styles.paramRow}>
+          <Text style={styles.paramKey}>otherParam</Text>
+          <Text style={styles.paramVal}>{JSON.stringify(otherParam)}</Text>
+        </View>
+      </View>
       <View style={styles.section}>
         <Text style={styles.sectionLabel}>NAVIGATION OBJECT</Text>
         {/* Section 7: navigation.navigate() */}
@@ -189,4 +205,9 @@ const styles = StyleSheet.create({
   sectionLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 2, color: C.muted, marginBottom: 4 },
   btn: { paddingVertical: 14, paddingHorizontal: 20, borderRadius: 6, borderWidth: 1, alignItems: 'center' },
   btnText: { fontSize: 13, fontWeight: '700', letterSpacing: 1 },
+  card: { backgroundColor: C.surface, borderWidth: 1, borderColor: C.border, borderRadius: 8, padding: 16, marginBottom: 24, gap: 10 },
+  cardLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 2, color: C.muted, marginBottom: 4 },
+  paramRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: C.border },
+  paramKey: { fontSize: 13, color: C.muted, fontWeight: '600', letterSpacing: 0.5 },
+  paramVal: { fontSize: 13, color: C.text, fontWeight: '700' },
 });
