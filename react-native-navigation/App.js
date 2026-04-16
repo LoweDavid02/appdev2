@@ -107,6 +107,20 @@ function DetailsScreen({ navigation }) {
           onPress={() => navigation.goBack()}
         />
       </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>NAVIGATE VS PUSH</Text>
+        {/* Section 8: navigate() does nothing if already on this screen */}
+        <Btn
+          label="↻  navigate('Details') — no-op if here"
+          variant="ghost"
+          onPress={() => navigation.navigate('Details')}
+        />
+        {/* Section 8: push() always adds a new instance */}
+        <Btn
+          label="＋  push('Details') — always adds"
+          onPress={() => navigation.push('Details')}
+        />
+      </View>
     </ScrollView>
   );
 }
