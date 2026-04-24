@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Ionicons from "@react-native-vector-icons/ionicons";
+import { Ionicons } from "@expo/vector-icons";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -11,15 +11,270 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useConvex } from "convex/react";
+import { GenericId } from "convex/values";
 import { api } from "../convex/_generated/api";
-import { Id } from "../convex/_generated/dataModel";
 
-const TodoScreen = () => {
+// ---------------------------------------------------------------------------
+// Detect whether a ConvexProvider is present in the tree.
+// useConvex() returns the client object when a provider exists, or undefined
+// when it does not — it does NOT throw. We check the return value directly.
+// ---------------------------------------------------------------------------
+function useHasConvexProvider(): boolean {
+  const client = useConvex();
+  return client !== undefined && client !== null;
+}
+
+// ---------------------------------------------------------------------------
+// Local todo type (mirrors the Convex schema shape)
+// ---------------------------------------------------------------------------
+type LocalTodo = {
+  _id: string;
+  text: string;
+  isCompleted: boolean;
+};
+
+// Convex document shape for a todo
+type TodoDoc = {
+  _id: GenericId<"todos">;
+  _creationTime: number;
+  text: string;
+  isCompleted: boolean;
+};
+
+// ---------------------------------------------------------------------------
+// Shared UI props
+// ---------------------------------------------------------------------------
+type TodoUIProps = {
+  task: string;
+  setTask: (v: string) => void;
+  searchQuery: string;
+  setSearchQuery: (v: string) => void;
+  filterTodos: LocalTodo[];
+  completedCount: number;
+  totalCount: number;
+  handleAddTodo: () => void;
+  toggleTodo: (id: string) => void;
+  confirmDelete: (id: string) => void;
+};
+
+// ---------------------------------------------------------------------------
+// Shared UI — used by both local and Convex modes
+// ---------------------------------------------------------------------------
+const TodoUI = ({
+  task,
+  setTask,
+  searchQuery,
+  setSearchQuery,
+  filterTodos,
+  completedCount,
+  totalCount,
+  handleAddTodo,
+  toggleTodo,
+  confirmDelete,
+}: TodoUIProps) => (
+  <View style={styles.container}>
+    {/* Header (Purple) */}
+    <View style={styles.header}>
+      <View style={styles.headerTop}>
+        <View>
+          <Text style={styles.greeting}>Good day! 👋</Text>
+          <Text style={styles.title}>My Tasks</Text>
+        </View>
+        <View style={styles.statsCircle}>
+          <Text style={styles.statsNumber}>{completedCount}</Text>
+          <Text style={styles.statsLabel}>done</Text>
+        </View>
+      </View>
+
+      <Text style={styles.progressLabel}>
+        {completedCount} of {totalCount} tasks completed
+      </Text>
+      <View style={styles.progressBarBg}>
+        <View
+          style={[
+            styles.progressBarFill,
+            {
+              width:
+                totalCount > 0
+                  ? (`${Math.round((completedCount / totalCount) * 100)}%` as `${number}%`)
+                  : "0%",
+            },
+          ]}
+        />
+      </View>
+
+      <View style={styles.searchContainer}>
+        <Ionicons name="search-outline" size={20} color="#9B97FF" />
+        <TextInput
+          placeholder="Search todos..."
+          placeholderTextColor="#AAA"
+          style={styles.searchBar}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity onPress={() => setSearchQuery("")}>
+            <Ionicons name="close-circle" size={20} color="#AAA" />
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+
+    {/* Body (White with Rounded Top) */}
+    <View style={styles.bodyContainer}>
+      {filterTodos.length === 0 ? (
+        <View style={styles.emptyState}>
+          <Ionicons name="checkmark-done-circle-outline" size={64} color="#E0DFFF" />
+          <Text style={styles.emptyTitle}>
+            {searchQuery ? "No results found" : "All clear!"}
+          </Text>
+          <Text style={styles.emptySubtitle}>
+            {searchQuery
+              ? "Try a different search term"
+              : "Add a task below to get started"}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {filterTodos.map((item) => (
+            <View style={styles.todoItem} key={item._id}>
+              <TouchableOpacity
+                style={styles.textWrapper}
+                onPress={() => toggleTodo(item._id)}
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    styles.checkCircle,
+                    item.isCompleted && styles.checkCircleCompleted,
+                  ]}
+                >
+                  {item.isCompleted && (
+                    <Ionicons name="checkmark" size={16} color="#FFF" />
+                  )}
+                </View>
+                <Text
+                  style={[
+                    styles.todoText,
+                    item.isCompleted && styles.todoCompleted,
+                  ]}
+                >
+                  {item.text}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => confirmDelete(item._id)}
+                style={styles.deleteBtn}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="trash-outline" size={20} color="#FF5252" />
+              </TouchableOpacity>
+            </View>
+          ))}
+          <View style={{ height: 20 }} />
+        </ScrollView>
+      )}
+
+      {/* Input Section */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+      >
+        <View style={styles.inputWrapper}>
+          <TextInput
+            placeholder="Add a new task..."
+            placeholderTextColor="#BBB"
+            style={styles.input}
+            value={task}
+            onChangeText={setTask}
+            onSubmitEditing={handleAddTodo}
+            returnKeyType="done"
+          />
+          <TouchableOpacity
+            style={[
+              styles.addButton,
+              task.trim().length === 0 && styles.addButtonDisabled,
+            ]}
+            onPress={handleAddTodo}
+            activeOpacity={0.8}
+          >
+            <Ionicons
+              name="add"
+              size={32}
+              color={task.trim().length === 0 ? "#AAA" : "#1A1A2E"}
+            />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
+  </View>
+);
+
+// ---------------------------------------------------------------------------
+// Local-state todo screen — fully functional without any backend
+// ---------------------------------------------------------------------------
+const LocalTodoScreen = () => {
+  const [task, setTask] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [todos, setTodos] = useState<LocalTodo[]>([]);
+  const [nextId, setNextId] = useState(1);
+
+  const filterTodos = todos.filter((item) =>
+    item.text.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())
+  );
+
+  const handleAddTodo = () => {
+    if (task.trim().length === 0) return;
+    setTodos((prev) => [
+      { _id: String(nextId), text: task.trim(), isCompleted: false },
+      ...prev,
+    ]);
+    setNextId((n) => n + 1);
+    setTask("");
+  };
+
+  const toggleTodo = (id: string) => {
+    setTodos((prev) =>
+      prev.map((t) => (t._id === id ? { ...t, isCompleted: !t.isCompleted } : t))
+    );
+  };
+
+  const confirmDelete = (id: string) => {
+    Alert.alert("Delete Task", "Are you sure you want to remove this?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => setTodos((prev) => prev.filter((t) => t._id !== id)),
+      },
+    ]);
+  };
+
+  return (
+    <TodoUI
+      task={task}
+      setTask={setTask}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      filterTodos={filterTodos}
+      completedCount={todos.filter((t) => t.isCompleted).length}
+      totalCount={todos.length}
+      handleAddTodo={handleAddTodo}
+      toggleTodo={toggleTodo}
+      confirmDelete={confirmDelete}
+    />
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Convex-backed todo screen — only rendered when ConvexProvider is present
+// ---------------------------------------------------------------------------
+const ConvexTodoScreen = () => {
   const [task, setTask] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const todoList = useQuery(api.todos.get);
+  const todoList = useQuery(api.todos.get) as TodoDoc[] | undefined;
   const addTodo = useMutation(api.todos.add);
   const toggleTodoMutation = useMutation(api.todos.toggle);
   const deleteTodoMutation = useMutation(api.todos.remove);
@@ -42,11 +297,11 @@ const TodoScreen = () => {
     setTask("");
   };
 
-  const toggleTodo = (id: Id<"todos">, currentStatus: boolean) => {
+  const toggleTodo = (id: GenericId<"todos">, currentStatus: boolean) => {
     toggleTodoMutation({ id, isCompleted: !currentStatus });
   };
 
-  const confirmDelete = (id: Id<"todos">) => {
+  const confirmDelete = (id: GenericId<"todos">) => {
     Alert.alert("Delete Task", "Are you sure you want to remove this?", [
       { text: "Cancel", style: "cancel" },
       {
@@ -57,142 +312,37 @@ const TodoScreen = () => {
     ]);
   };
 
-  const completedCount = todoList.filter((item) => item.isCompleted).length;
-  const totalCount = todoList.length;
+  const adaptedTodos: LocalTodo[] = filterTodos.map((item) => ({
+    _id: item._id as string,
+    text: item.text,
+    isCompleted: item.isCompleted,
+  }));
 
   return (
-    <View style={styles.container}>
-      {/* 1. Header Section (Purple) */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <View>
-            <Text style={styles.greeting}>Good day! 👋</Text>
-            <Text style={styles.title}>My Tasks</Text>
-          </View>
-          <View style={styles.statsCircle}>
-            <Text style={styles.statsNumber}>{completedCount}</Text>
-            <Text style={styles.statsLabel}>done</Text>
-          </View>
-        </View>
-
-        <Text style={styles.progressLabel}>
-          {completedCount} of {totalCount} tasks completed
-        </Text>
-        <View style={styles.progressBarBg}>
-          <View
-            style={[
-              styles.progressBarFill,
-              {
-                width:
-                  totalCount > 0
-                    ? `${(completedCount / totalCount) * 100}%`
-                    : "0%",
-              },
-            ]}
-          />
-        </View>
-
-        <View style={styles.searchContainer}>
-          <Ionicons name="search-outline" size={20} color="#9B97FF" />
-          <TextInput
-            placeholder="Search todos..."
-            placeholderTextColor="#AAA"
-            style={styles.searchBar}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery("")}>
-              <Ionicons name="close-circle" size={20} color="#AAA" />
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-
-      {/* 2. Body Section (White with Rounded Top) */}
-      <View style={styles.bodyContainer}>
-        {filterTodos.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Ionicons name="checkmark-done-circle-outline" size={64} color="#E0DFFF" />
-            <Text style={styles.emptyTitle}>
-              {searchQuery ? "No results found" : "All clear!"}
-            </Text>
-            <Text style={styles.emptySubtitle}>
-              {searchQuery
-                ? "Try a different search term"
-                : "Add a task below to get started"}
-            </Text>
-          </View>
-        ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {filterTodos.map((item) => (
-              <View style={styles.todoItem} key={item._id}>
-                <TouchableOpacity
-                  style={styles.textWrapper}
-                  onPress={() => toggleTodo(item._id, item.isCompleted)}
-                  activeOpacity={0.7}
-                >
-                  <View
-                    style={[
-                      styles.checkCircle,
-                      item.isCompleted && styles.checkCircleCompleted,
-                    ]}
-                  >
-                    {item.isCompleted && (
-                      <Ionicons name="checkmark" size={16} color="#FFF" />
-                    )}
-                  </View>
-                  <Text
-                    style={[
-                      styles.todoText,
-                      item.isCompleted && styles.todoCompleted,
-                    ]}
-                  >
-                    {item.text}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => confirmDelete(item._id)}
-                  style={styles.deleteBtn}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons name="trash-outline" size={20} color="#FF5252" />
-                </TouchableOpacity>
-              </View>
-            ))}
-            <View style={{ height: 20 }} />
-          </ScrollView>
-        )}
-
-        {/* 3. Input Section */}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
-        >
-          <View style={styles.inputWrapper}>
-            <TextInput
-              placeholder="Add a new task..."
-              placeholderTextColor="#BBB"
-              style={styles.input}
-              value={task}
-              onChangeText={setTask}
-              onSubmitEditing={handleAddTodo}
-              returnKeyType="done"
-            />
-            <TouchableOpacity
-              style={[styles.addButton, task.trim().length === 0 && styles.addButtonDisabled]}
-              onPress={handleAddTodo}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="add" size={32} color={task.trim().length === 0 ? "#AAA" : "#1A1A2E"} />
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
-    </View>
+    <TodoUI
+      task={task}
+      setTask={setTask}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      filterTodos={adaptedTodos}
+      completedCount={todoList.filter((item) => item.isCompleted).length}
+      totalCount={todoList.length}
+      handleAddTodo={handleAddTodo}
+      toggleTodo={(id) => {
+        const original = todoList.find((t) => (t._id as string) === id);
+        if (original) toggleTodo(original._id, original.isCompleted);
+      }}
+      confirmDelete={(id) => {
+        const original = todoList.find((t) => (t._id as string) === id);
+        if (original) confirmDelete(original._id);
+      }}
+    />
   );
 };
 
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
@@ -204,6 +354,7 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 18,
     fontWeight: "600",
+    marginTop: 16,
   },
   container: {
     flex: 1,
@@ -267,7 +418,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   progressBarFill: {
-    height: "100%",
+    height: 6,
     backgroundColor: "#FFCC00",
     borderRadius: 3,
   },
@@ -416,5 +567,15 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
 });
+
+// ---------------------------------------------------------------------------
+// Public export
+// Renders ConvexTodoScreen when a real ConvexProvider is in the tree,
+// otherwise falls back to the fully-functional local-state version.
+// ---------------------------------------------------------------------------
+const TodoScreen = () => {
+  const hasProvider = useHasConvexProvider();
+  return hasProvider ? <ConvexTodoScreen /> : <LocalTodoScreen />;
+};
 
 export default TodoScreen;

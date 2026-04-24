@@ -9,7 +9,7 @@ import { v } from "convex/values";
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("todos").order("desc").collect();
+    return await ctx.db.query("todos").order("desc").take(100);
   },
 });
 
